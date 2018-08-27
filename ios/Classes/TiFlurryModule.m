@@ -7,6 +7,8 @@
 #import "TiFlurryModule.h"
 #import "Flurry.h"
 
+extern NSString * const TI_APPLICATION_VERSION;
+
 @implementation TiFlurryModule
 
 #pragma mark Lifecycle
@@ -26,17 +28,24 @@
 #pragma mark -
 #pragma mark Public Lifecycle
 
--(void)initialize:(id)apiKey
+-(void)initialize:(id)args
 {
-	ENSURE_SINGLE_ARG(apiKey, NSString);
-	[Flurry startSession:apiKey];
-}
-
--(void)initializeWithCrashReporting:(id)apiKey
-{
-	ENSURE_SINGLE_ARG(apiKey, NSString);
-	[Flurry setCrashReportingEnabled:YES];
-	[Flurry startSession:apiKey];
+    ENSURE_SINGLE_ARG(args, NSDictionary);
+    
+    FlurrySessionBuilder* builder = [FlurrySessionBuilder new];
+    
+    [builder withCrashReporting:[TiUtils boolValue:@"enableCrashReporting" properties:args def:YES]];
+    [builder withAppVersion:[TiUtils stringValue:@"appVersion" properties:args def:TI_APPLICATION_VERSION]];
+    
+    if ([args objectForKey:@"timeout"]) {
+        [builder withSessionContinueSeconds:[TiUtils intValue:@"timeout" properties:args]];
+    }
+    
+    if ([args objectForKey:@"logLevel"]) {
+        [builder withLogLevel:[args objectForKey:@"logLevel"]];
+    }
+    
+    [Flurry startSession:[TiUtils stringValue:@"apiKey" properties:args]];
 }
 
 # pragma mark Public Properties
@@ -57,18 +66,6 @@
 {
     ENSURE_SINGLE_ARG(value, NSString);
     [Flurry setGender:value];
-}
-
--(void)setDebugLogEnabled:(id)value
-{
-    ENSURE_SINGLE_ARG(value, NSNumber);
-	[Flurry setDebugLogEnabled:[TiUtils boolValue:value]];
-}
-
--(void)setEventLoggingEnabled:(id)value
-{
-    ENSURE_SINGLE_ARG(value, NSNumber);
-	[Flurry setEventLoggingEnabled:[TiUtils boolValue:value]];
 }
 
 -(void)setReportOnClose:(id)value
@@ -180,5 +177,12 @@
     ENSURE_UI_THREAD(logPageView, args);
     [Flurry logPageView];
 }
+
+#pragma mark - Properties
+
+MAKE_SYSTEM_PROP(LOG_LEVEL_NONE, FlurryLogLevelNone);
+MAKE_SYSTEM_PROP(LOG_LEVEL_ALL, FlurryLogLevelAll);
+MAKE_SYSTEM_PROP(LOG_LEVEL_DEBUG, FlurryLogLevelDebug);
+MAKE_SYSTEM_PROP(LOG_LEVEL_CRITICAL, FlurryLogLevelCriticalOnly);
 
 @end

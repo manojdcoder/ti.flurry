@@ -14,4 +14,9 @@
 
 @interface TiFlurryModule : TiModule
 
+@property(nonatomic,readonly) NSNumber* LOG_LEVEL_NONE;
+@property(nonatomic,readonly) NSNumber* LOG_LEVEL_ALL;
+@property(nonatomic,readonly) NSNumber* LOG_LEVEL_DEBUG;
+@property(nonatomic,readonly) NSNumber* LOG_LEVEL_CRITICAL;
+
 @end

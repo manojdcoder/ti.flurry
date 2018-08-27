@@ -10,11 +10,11 @@ To access this module from JavaScript, you would do the following:
 
 ## Properties
 
-### bool debugLogEnabled
-Turns on additional logging. Defaults to false;
-
-### bool eventLoggingEnabled
-Turns on additional logging. Defaults to false.
+### constant 
+- LOG_LEVEL_NONE
+- LOG_LEVEL_ALL
+- LOG_LEVEL_DEBUG
+- LOG_LEVEL_CRITICAL
 
 ### string userID
 Use this to log the user's assigned ID or username in your system after identifying the user. 
@@ -39,12 +39,16 @@ crash.
 
 ## Functions
 
-### initialize(string apiKey)
+### initialize(dictionary args) 
 Initializes your Flurry session. You must get your own apiKey from Flurry's website: https://dev.flurry.com/
 
-### initializeWithCrashReporting(string apiKey)
-Initializes your Flurry session. Enables Flurry to handle crash reporting. You must get your own apiKey from Flurry's website: https://dev.flurry.com/
-NOTE: iOS only allows one crash reporting tool per app; if using another, use Flurry.initialize('<key>') instead.
+The passed in dictionary should contain the following keys:
+
+* string apiKey
+* float timeout
+* constant logLevel
+* string appVersion
+* boolean enableCrashReporting
 
 ### logEvent(string event[, dictionary properties])
 Use logEvent to count the number of times certain events happen during a session of your application. This can be useful

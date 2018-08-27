@@ -3,13 +3,22 @@
  */
 #import "TiFlurryModuleAssets.h"
 
-extern NSData * dataWithHexString (NSString * hexString);
+extern NSData* filterDataInRange(NSData* thedata, NSRange range);
 
 @implementation TiFlurryModuleAssets
 
-- (NSData*) moduleAsset
+- (NSData *)moduleAsset
 {
-	return nil;
+  
+
+  return nil;
+}
+
+- (NSData *)resolveModuleAsset:(NSString *)path
+{
+  
+
+  return nil;
 }
 
 @end
